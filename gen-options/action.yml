@@ -1,0 +1,26 @@
+name: gen-options
+description: Generate BigWigs options files and lint boss modules.
+inputs:
+  path:
+    description: Directory with a modules.xml file or path to a lua file.
+    required: false
+    default: '.'
+  quiet:
+    description: Only output errors.
+    required: false
+  lint:
+    description: Don't write option files.
+    required: false
+runs:
+  using: composite
+  steps:
+    - run: sudo apt-get install -yq lua5.1 &>/dev/null
+      shell: bash
+    - run: |
+        curl -so "$GITHUB_ACTION_PATH/gen_option_values.lua" https://raw.githubusercontent.com/BigWigsMods/BigWigs/master/gen_option_values.lua
+        args=''
+        [[ ${{ inputs.quiet }} == 'true' ]] && args+='-q'
+        [[ ${{ inputs.lint }} == 'true' ]] && args+=' -n'
+        eval lua "$GITHUB_ACTION_PATH/gen_option_values.lua" "${{ inputs.path }}" $args
+      working-directory: ${{ github.workspace }}
+      shell: bash
