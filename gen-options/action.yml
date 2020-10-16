@@ -19,8 +19,8 @@ runs:
     - run: |
         curl -so "$GITHUB_ACTION_PATH/gen_option_values.lua" https://raw.githubusercontent.com/BigWigsMods/BigWigs/master/gen_option_values.lua
         args=''
-        [[ ${{ inputs.quiet }} == 'true' ]] && args+='-q'
-        [[ ${{ inputs.lint }} == 'true' ]] && args+=' -n'
+        [[ "${{ inputs.quiet }}" == "true" ]] && args+='-q'
+        [[ "${{ inputs.lint }}" == "true" ]] && args+=' -n'
         eval lua "$GITHUB_ACTION_PATH/gen_option_values.lua" "${{ inputs.path }}" $args
       working-directory: ${{ github.workspace }}
       shell: bash
